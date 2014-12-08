@@ -19,3 +19,11 @@ PredixMod - Pipeline to develop prediction models for GTEX data and cross-valida
 5. Note: had to download on genegate, rsync to tarbell and decrypt on tarbell
 `> /group/im-lab/nas40t2/haky/Data/decryption.2.4.2-ubuntu64/bin/vdb-decrypt   41400/
 `
+
+
+### Convert GTEx genotypes to downstream file formats
+- for all autosomal SNPs combined in one file: 1_vcf2dosage.mach_gtex_hapmapSNPs.pl
+- for separate files per autosome: 1_vcf2dosage.mach.chr_gtex_hapmapSNPs.pl
+
+### Convert GTEx RNA-seq data for downstream analyses
+- 2_pull_protein_coding_RPKM_rebuild.pl
