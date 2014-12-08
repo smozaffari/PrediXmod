@@ -3,11 +3,14 @@
 use warnings;
 use List::Util qw[min max];
 
+####This perl script takes the GTEx imputed vcf file as input, removes ambiguous-strand SNPs (A/T and C/G)
+#### and makes several output files for each autosome for future parallel computing:
+#### .mlinfo.gz and .mldose.gz MACH files for GCTA
+#### .SNPxID matrix for quick scanning into R
+#### .bim plink bim file with SNP pos info in .SNPxID
+
 my $dir = "/nas40t2/gtex/GTEx_Analysis_2014-06-13/genotypes/OMNI_arrays/";
 my $file = "GTEx_Analysis_2014-06-13_OMNI_2.5M_5M_451Indiv_allchr_genot_imput_info04_maf01_HEW1E6.vcf.gz";
-
-#my $dir = "/nas40t2/hwheeler/PrediXcan_CV/GTEx_2014-06013_release/";
-#my $file = "head.GTEx_Analysis_2014-06-13_OMNI_2.5M_5M_451Indiv_allchr_genot_imput_info04_maf01_HEW1E6.vcf.gz";
 
 system("zcat ${dir}${file} > tmp.vcf");
 
@@ -90,3 +93,4 @@ for(my $i = 1; $i <= 22; $i++){
 
 system("gzip *.mldose");
 system("gzip *.mlinfo");
+system("rm intro t.dos.chr*");

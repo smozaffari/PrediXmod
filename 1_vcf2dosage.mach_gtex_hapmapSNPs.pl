@@ -2,11 +2,17 @@
 use strict;
 use warnings;
 
+####This perl script takes the GTEx imputed vcf file as input, removes ambiguous-strand SNPs (A/T and C/G)
+#### and makes several output files:
+#### .dosage.gz file for PrediXcan (compute.scores.py)
+#### .mlinfo.gz and .mldose.gz MACH files for GCTA
+#### .SNPxID matrix for quick scanning into R
+#### .ID.list colnames of matrix
+#### .SNP.list rownames of matrix
+#### .bim plink bim file with SNP pos info
+
 my $dir = "/nas40t2/gtex/GTEx_Analysis_2014-06-13/genotypes/OMNI_arrays/";
 my $file = "GTEx_Analysis_2014-06-13_OMNI_2.5M_5M_451Indiv_allchr_genot_imput_info04_maf01_HEW1E6.vcf.gz";
-
-#my $dir = "/nas40t2/hwheeler/PrediXcan_CV/GTEx_2014-06013_release/";
-#my $file = "head.GTEx_Analysis_2014-06-13_OMNI_2.5M_5M_451Indiv_allchr_genot_imput_info04_maf01_HEW1E6.vcf.gz";
 
 system("zcat ${dir}${file} > tmp.vcf");
 
@@ -20,7 +26,7 @@ while(<HAP>){
     $hapmapsnps{$snp} = 1;
 }
 
-#outfiles for lasso:
+#outfiles for downstream applications:
 open(DOS, ">GTEx_Analysis_2014-06-13_OMNI_2.5M_5M_451Indiv.hapmapSnpsCEU.unamb.dosage");
 open(ID, ">GTEx_Analysis_2014-06-13.hapmapSnpsCEU.ID.list");
 open(SNP, ">GTEx_Analysis_2014-06-13.hapmapSnpsCEU.SNP.list");
@@ -83,4 +89,4 @@ system("paste -d\' \' intro t.dos > GTEx_Analysis_2014-06-13.hapmapSnpsCEU.mldos
 system("gzip GTEx_Analysis_2014-06-13_OMNI_2.5M_5M_451Indiv.hapmapSnpsCEU.unamb.dosage");
 system("gzip GTEx_Analysis_2014-06-13.hapmapSnpsCEU.mldose");
 system("gzip GTEx_Analysis_2014-06-13.hapmapSnpsCEU.mlinfo");
-system("rm into t.dos");
+system("rm intro t.dos");
