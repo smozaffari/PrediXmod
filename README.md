@@ -27,3 +27,12 @@ PredixMod - Pipeline to develop prediction models for GTEX data and cross-valida
 
 ### Convert GTEx RNA-seq data for downstream analyses
 - 2_pull_protein_coding_RPKM_rebuild.pl
+
+### Normalize and adjust the GTEx RNA-seq data by PEER factors and genotype principal components
+- 3_calc_PEER_adj_exp.r
+
+### Run LASSO cross-validation for GTEx tissue of interest, save R^2 and best betas
+- 4_CV_GTEx_lasso_adjusted.r
+
+### Run polyscore cross-validation for GTEx tissue of interest, save R^2 and top betas
+- 8_CV_GTEX_polyscore_adjusted.r
