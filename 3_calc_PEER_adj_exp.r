@@ -21,7 +21,10 @@ Nk <- 15 ##number of peer factors to calculate, recommend 25% of sample size, bu
 library(SNPRelate)
 library(peer)
 library(preprocessCore)
-library(GenABEL)
+#library(GenABEL)
+##if can't install GenABEL
+source(my.dir %&% 'GenABEL/R/ztransform.R')
+source(my.dir %&% 'GenABEL/R/rntransform.R')
  
 ################################################
 sam <- read.table(my.dir %&% "GTEx_Analysis_2014-06-13.SampleTissue.annot",header=T,sep="\t") 
