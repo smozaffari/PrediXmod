@@ -17,8 +17,8 @@
 ### Normalize and adjust the GTEx RNA-seq data by PEER factors and genotype principal components
 - 3_calc_PEER_adj_exp.r
 
-### Run LASSO cross-validation for GTEx tissue of interest, save R^2 and best betas
+### Run LASSO cross-validation for GTEx tissue of interest, save R^2^ and best betas
 - 4_CV_GTEx_lasso_adjusted.r
 
-### Run polyscore cross-validation for GTEx tissue of interest, save R^2 and top betas
+### Run polyscore cross-validation for GTEx tissue of interest, save R^2^ and top betas
 - 8_CV_GTEX_polyscore_adjusted.r
