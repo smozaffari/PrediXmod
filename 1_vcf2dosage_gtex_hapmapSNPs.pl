@@ -9,7 +9,7 @@ my $file = "GTEx_Analysis_2014-06-13_OMNI_2.5M_5M_451Indiv_allchr_genot_imput_in
 system("zcat ${dir}${file} > tmp.vcf");
 
 open(VCF, "tmp.vcf");
-open(HAP, "/nas40t2/hwheeler/PrediXcan_CV/hapmapSnpsCEU.list"); ##from http://hgdownload.cse.ucsc.edu/goldenPath/hg19/database/hapmapSnpsCEU.txt.gz
+open(HAP, "/group/im-lab/nas40t2/hwheeler/PrediXcan_CV/hapmapSnpsCEU.list"); ##from http://hgdownload.cse.ucsc.edu/goldenPath/hg19/database/hapmapSnpsCEU.txt.gz
 
 my %hapmapsnps;
 while(<HAP>){

@@ -6,7 +6,7 @@ date <- Sys.Date()
 ###############################################
 ### Directories & Variables
 cri = T #on cri cluster?
-if(cri) precri = "/group/dolan-lab/hwheeler/" else precri = '/'
+if(cri) precri = "/group/im-lab/" else precri = '/'
 
 tis <- "GTEx-NT"
 k <- 10 ### k-fold CV

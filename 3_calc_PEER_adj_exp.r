@@ -6,7 +6,7 @@ date <- Sys.Date()
 ### Directories & Variables
  
 cri = F #on cri cluster?
-if(cri) precri = "/group/dolan-lab/hwheeler/" else precri = '/'
+if(cri) precri = "/group/im-lab/" else precri = '/'
 
 my.dir <- precri %&% "nas40t2/hwheeler/PrediXcan_CV/GTEx_2014-06013_release/"
  
@@ -28,7 +28,8 @@ source(my.dir %&% 'GenABEL/R/rntransform.R')
  
 ################################################
 sam <- read.table(my.dir %&% "GTEx_Analysis_2014-06-13.SampleTissue.annot",header=T,sep="\t") 
-### above file includes SAMPID and SMTSD from: /nas40t2/gtex/GTEx_Analysis_2014-06-13/sample_annotations/GTEx_Data_2014-06-13_Annotations_SampleAttributesDS.txt
+### above file includes SAMPID and SMTSD from: 
+### /group/im-lab/nas40t2/haky/Data/dbGaP/GTEx/41400/gtex/exchange/GTEx_phs000424/exchange/analysis_releases/GTEx_Analysis_2014-06-13/sample_annotations/GTEx_Data_2014-06-13_Annotations_SampleAttributesDS.txt
 sample <- subset(sam,SMTSD == tissue) ### pull sample list of chosen tissue###
  
 expidlist <- scan("GTEx_Analysis_2014-06-13.RNA-seq.ID.list","character")

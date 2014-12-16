@@ -13,13 +13,13 @@ use Compress::Zlib;
 #### .GENEname.list matching gene names for Ensembl IDs
 
 
-my $gtexdir = "/nas40t2/gtex/GTEx_Analysis_2014-06-13/rna-seq/";
+my $gtexdir = "/group/im-lab/nas40t2/haky/Data/dbGaP/GTEx/41400/gtex/exchange/GTEx_phs000424/exchange/analysis_releases/GTEx_Analysis_2014-06-13/rna-seq/";
 my $file = "GTEx_Analysis_2014-06-13_RNA-seq_RNA-SeQCv1.1.8_gene_rpkm.gct.gz";
 
-my $dir = "/nas40t2/hwheeler/PrediXcan_CV/GTEx_2014-06013_release/";
+my $dir = "/group/im-lab/nas40t2/hwheeler/PrediXcan_CV/GTEx_2014-06013_release/";
 
 my $pcfile = ${dir} . "gencode.v18.genes.patched_contigs.summary.protein";
-open(PCGENES, $pcfile); ##from /nas40t2/gtex/GTEx_Analysis_2014-06-13/reference_files/gencode.v18.genes.patched_contigs.gtf.gz, grep protein_coding
+open(PCGENES, $pcfile); ##from ../GTEx_Analysis_2014-06-13/reference_files/gencode.v18.genes.patched_contigs.gtf.gz, grep protein_coding
 
 my %pcgenes;
 while(<PCGENES>){

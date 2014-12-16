@@ -2,10 +2,13 @@
 ####by Heather E. Wheeler 20140602####
 args <- commandArgs(trailingOnly=T)
 date <- Sys.Date() 
+"%&%" = function(a,b) paste(a,b,sep="")
 ###############################################
 ### Directories & Variables
- 
-my.dir <- "/nas40t2/hwheeler/PrediXcan_CV/GTEx_2014-06013_release/"
+cri = T #on cri cluster?
+if(cri) precri = "/group/im-lab/" else precri = '/'
+
+my.dir <- precri %&% "nas40t2/hwheeler/PrediXcan_CV/GTEx_2014-06013_release/"
  
 tissue <- "Nerve - Tibial" ###check GTEx.SampleTissue.annot for available tissues###
 #tissue <- "Whole Blood"
@@ -17,8 +20,6 @@ gencodeset <- args[2]
  
 ################################################
 ### Functions & Libraries
- 
-"%&%" = function(a,b) paste(a,b,sep="")
  
 library(SNPRelate)
 library(glmnet)
@@ -166,8 +167,7 @@ for(i in 1:length(explist)){
         betatable<-as.matrix(cbind(bestbetainfo,bestbetas))
         betafile<-cbind(betatable[,2],betatable[,6],betatable[,7]) ###middle column: [,6] for GEUVADIS, [,5] for GTEx pilot, [,6] for GTEx 2014-06-13 release
         colnames(betafile) <- c("SNP","eff.allele","beta")
-#	write.table(betafile, file="/nas40t2/haky/Signatures/data/betas/LASSO/transcriptome-LCL-GD/" %&% genename %&% "-" %&% tis %&% ".txt",quote=F,row.names=F,sep="\t")
-        write.table(betafile, file="/nas40t2/hwheeler/PrediXcan_CV/LASSO/hapmap2/transcriptome-" %&% tis %&% "/" %&% genename %&% "-" %&% tis %&% ".txt",quote=F,row.names=F,sep="\t")
+        write.table(betafile, file=precri %&% "nas40t2/hwheeler/PrediXcan_CV/LASSO/hapmap2/transcriptome-" %&% tis %&% "/" %&% genename %&% "-" %&% tis %&% ".txt",quote=F,row.names=F,sep="\t")
     }else{
 	genename <- as.character(gencode[gene,6])
         resultsarray[gene,1] <- genename
