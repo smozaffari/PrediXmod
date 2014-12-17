@@ -37,6 +37,10 @@ open(MLINFO, ">GTEx_Analysis_2014-06-13.hapmapSnpsCEU.mlinfo");
 
 while(<VCF>){
     chomp;
+    my ($first) = split(/\t/);
+    if($first =~ m/##/){ ##skip	vcf info lines
+        next;
+    }
     my ($chr, $pos, $rs, $ref, $alt, $qual, $filter, $info, $format, @genos) = split(/\t/);
     my ($expfreq, $impinfo, $cert) = split(/;/,$info);
     my ($a, $freqalt) = split(/=/,$expfreq);
@@ -89,4 +93,4 @@ system("paste -d\' \' intro t.dos > GTEx_Analysis_2014-06-13.hapmapSnpsCEU.mldos
 system("gzip GTEx_Analysis_2014-06-13_OMNI_2.5M_5M_451Indiv.hapmapSnpsCEU.unamb.dosage");
 system("gzip GTEx_Analysis_2014-06-13.hapmapSnpsCEU.mldose");
 system("gzip GTEx_Analysis_2014-06-13.hapmapSnpsCEU.mlinfo");
-system("rm intro t.dos");
+system("rm intro t.dos runR.R");
