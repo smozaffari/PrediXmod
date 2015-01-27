@@ -104,9 +104,13 @@ for(my $i = 1; $i <= 22; $i++){
 
 
 for(my $i = 1; $i <= 22; $i++){
+    print "$i\n";
     open(R, ">runR.R") or die "cant mae runR.R\n";
-    print R "dat<-read.table(\"DGN-imputed-for-PrediXcan/DGN.imputed_maf0.05_R20.8.hapmapSnpsCEU.chr${i}.SNPxID\")\n";
+    print R "dat<-scan(\"DGN-imputed-for-PrediXcan/DGN.imputed_maf0.05_R20.8.hapmapSnpsCEU.chr${i}.SNPxID\")\n";
+    print R "gtidlist<-scan(\"DGN-imputed-for-PrediXcan/DGN.imputed_maf0.05_R20.8.hapmapSnpsCEU.ID.list\",\"character\")\n";
+    print R "dat<-matrix(dat, ncol=length(gtidlist), byrow=T)\n";
     print R "dat<-t(dat)\n";
+
     print R "write.table(dat,\"t.dos.chr${i}\",col.names=F,row.names=F,quote=F)\n";
     close(R);
     system("R --vanilla < runR.R");
@@ -116,3 +120,4 @@ for(my $i = 1; $i <= 22; $i++){
 system("gzip *.mldose");
 system("gzip *.mlinfo");
 system("rm intro t.dos.chr* runR.R");
+
