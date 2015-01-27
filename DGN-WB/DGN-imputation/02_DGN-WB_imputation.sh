@@ -41,3 +41,21 @@ done
 
 ##use sftp to upload *strand.switches.vcf.gz files to https://imputationserver.sph.umich.edu/start.html#!pages/run, see 'vcf.filelist.for.sftp' for paths 
 ##save output in /group/im-lab/nas40t2/hwheeler/PrediXcan_CV/GTEx_2014-06013_release/transfers/PrediXmod/DGN-WB/DGN-imputation/UMich-imputation-results/
+
+##to get results:
+cd /group/im-lab/nas40t2/hwheeler/PrediXcan_CV/GTEx_2014-06013_release/transfers/PrediXmod/DGN-WB/DGN-imputation/UMich-imputation-results/
+wget --no-check-certificate https://imputationserver.sph.umich.edu/share/hwheeler/cd99d530519817da738b3ff498dc5b7b/results.zip
+unzip results.zip ##password was emailed
+
+
+##filter results and check accuracy plots
+${RES}=/group/im-lab/nas40t2/hwheeler/PrediXcan_CV/GTEx_2014-06013_release/transfers/PrediXmod/DGN-WB/DGN-imputation/UMich-imputation-results/results/
+for (( i = 1 ; i <= 22; i++))
+do
+    ## use vcftools to remove indels and remove SNPs with MAF<0.05, keep INFO 
+    vcftools --gzvcf ${RES}chr$i.dose.vcf.gz --remove-indels --maf 0.05 --out ${RES}chr$i.dose_maf0.05_rm.indel --recode --recode-INFO-all
+    #pull data of interest
+    perl pull_qual_info.pl ${RES}chr$i.dose_maf0.05_rm.indel.recode.vcf > chr$i.r2
+done
+##plot R2 "Estimated Imputation Accuracy" and ER2 (concordance) "Empirical (Leave-One-Out) R-square (available only for genotyped variants)"
+R --vanilla < plot_impute_R2_ER2.r
