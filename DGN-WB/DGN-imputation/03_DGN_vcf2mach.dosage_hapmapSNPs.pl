@@ -117,7 +117,7 @@ for(my $i = 1; $i <= 22; $i++){
     system("paste -d\' \' intro t.dos.chr${i} > DGN-imputed-for-PrediXcan/DGN.imputed_maf0.05_R20.8.hapmapSnpsCEU.chr${i}.mldose");
 }
 
-system("gzip *.mldose");
-system("gzip *.mlinfo");
+system("gzip DGN-imputed-for-PrediXcan/*.mldose");
+system("gzip DGN-imputed-for-PrediXcan/*.mlinfo");
 system("rm intro t.dos.chr* runR.R");
 
