@@ -15,8 +15,7 @@ OUTPUT_FILE = 'output_file.txt'
 
 
 def get_all_dosages():
-    print "ONLY PROCESSING CHR1 FOR TESTING PURPOSES"
-    for chrfile in list(sorted(os.listdir(DOSAGE_DIR)))[:1]:
+    for chrfile in sorted(os.listdir(DOSAGE_DIR)):
         print datetime.datetime.now(), "Processing %s"%chrfile
         for line in gzip.open(os.path.join(DOSAGE_DIR, chrfile)):
             arr = line.strip().split()
