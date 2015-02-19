@@ -86,6 +86,8 @@ weightcol = c("gene","SNP","refAllele","effectAllele","beta")
 workingweight <- en.dir %&% tis %&% "_elasticNet_alpha" %&% alpha %&% "_weights_chr" %&% chrom %&% "_" %&% date %&% ".txt"
 write(weightcol,file=workingweight,ncol=5,sep="\t")
 
+#set.seed(1001) ##forgot to include in 2/2/15 run, should I re-run?
+
 for(i in 1:length(explist)){
   cat(i,"/",length(explist),"\n")
   gene <- explist[i]

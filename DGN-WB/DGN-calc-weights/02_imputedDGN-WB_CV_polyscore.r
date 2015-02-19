@@ -211,7 +211,7 @@ for(i in 1:length(explist)){
   write(resultsarray[gene,],file=workingbest,ncolumns=5,append=T,sep="\t")
 }
 
-write.table(resultsarray,file=tis %&% "_exp_" %&% k %&% "-foldCV_elasticNet_Pthresh" %&% pthresh %&% "_imputedSNPs_chr" %&% chrom %&% "_" %&% date %&% ".txt",quote=F,row.names=F,sep="\t")
+write.table(resultsarray,file=tis %&% "_exp_" %&% k %&% "-foldCV_polyscore_Pthresh" %&% pthresh %&% "_imputedSNPs_chr" %&% chrom %&% "_" %&% date %&% ".txt",quote=F,row.names=F,sep="\t")
 
 
 
