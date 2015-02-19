@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+
+import argparse
 from collections import defaultdict
 import datetime
 import gzip
@@ -7,11 +9,18 @@ import os
 import sqlite3
 import sys
 
-DATA_DIR = 'data'
-GENE_LIST = os.path.join(DATA_DIR, 'genelist.txt')
-DOSAGE_DIR = os.path.join(DATA_DIR, 'dosages')
-BETA_FILE = os.path.join(DATA_DIR, 'betas.db')
-OUTPUT_FILE = 'output_file.txt'
+parser = argparse.ArgumentParser()
+parser.add_argument('genelist', help="Text file with chromosome, gene pairs.")
+parser.add_argument('dosages', help="Path to a directory of gzipped dosage files.")
+parser.add_argument('weights', help="SQLite database with rsid weights.")
+parser.add_argument('output', help="Path to the output file.")
+args = parser.parse_args()
+
+ 
+GENE_LIST = args.genelist
+DOSAGE_DIR = args.dosages
+BETA_FILE = args.weights
+OUTPUT_FILE = args.output
 
 
 def get_all_dosages():
