@@ -1,18 +1,21 @@
 #!/usr/bin/perl
 use strict;
 use warnings;
+use Compress::Zlib;
 
 ####################################
 # Kaanan Shah
 # 2/10/14
 # Cox Lab
-# This script will run PrediXcan to predict gene expression values using betas from a weight file and snp dosages for specific cohort of people.
+# This script will  predict gene expression values using betas from a weight file and snp dosages for specific cohort of people.
 #
 # The script requires 4 arguments:
 # 1. The weight file in the following format:
 # gene	SNP	refAllele	effectAllele	beta
 # A2LD1	rs10508048	C	T	 2.467627e-03
 # A2LD1	rs1055705	G	A	 3.480362e-03
+# The columns must be in the exact order!
+# the effect allele must be listed 2nd
 #
 # 2. The director of the dosages. Each gzipped dosage file should follow the naming structure: [cohort]_chr[chr#].dos.gz and have the following format:
 # columns are snp snp position allele1 allele2 MAF dosage.....dosage for each person refers to the number of alleles for the 2nd allele listed (between 0 and 2).
@@ -20,6 +23,8 @@ use warnings;
 # rs56934710 rs56934710 96736 T C 0.10693 0.933 0.934 0.023 0.024 ...
 # rs72710816 rs72710816 97562 T C 0.10576 0.936 0.936 0.021 0.022 ...
 # There should be 1 file for each chromosome (1-22) and a sample file ([cohort]sample.txt that has the individual IDs 1 per line (no header) in the order they appear in the dosage files.
+# The columns must be in the exact order!
+# The dosage allele must be listed 2nd.
 #
 # 3. the prefix for the cohort being tested
 #
@@ -27,7 +32,7 @@ use warnings;
 ####################################
 
 
-if (scalar(@ARGV) != 4) {print "I need more information to run\n runPrediXcan.pl [betafile] [genotypedirectory] [cohort] [outfile]\n"; die;}
+if (scalar(@ARGV) != 4) {print "I need more information to run\n runPrediXcan.pl [betafile] [genotypedirectory] [cohort] [outfile]\nThe script requires 4 arguments:\n1. The weight file in the following format:\n     gene	SNP	refAllele	effectAllele	beta\n     A2LD1	rs10508048	C	T	 2.467627e-03\n     A2LD1	rs1055705	G	A	 3.480362e-03\n     The columns must be in the exact order!\n     the effect allele must be listed 2nd\n\n    2. The director of the dosages. Each gzipped dosage file should follow the naming structure: [cohort]_chr[chr#].dos.gz and have the following format:\n     columns are snp snp position allele1 allele2 MAF dosage.....dosage for each person refers to the number of alleles for the 2nd allele listed (between 0 and 2).\n     in the example below, the 4th individual is likely homozygous TT for both SNPs.\n     rs56934710 rs56934710 96736 T C 0.10693 0.933 0.934 0.023 0.024 ...\n     rs72710816 rs72710816 97562 T C 0.10576 0.936 0.936 0.021 0.022 ...\n     There should be 1 file for each chromosome (1-22) and a sample file ([cohort]sample.txt that has the individual IDs 1 per line (no header) in the order they appear in the dosage files.\n     The columns must be in the exact order!\n     The dosage allele must be listed 2nd.\n\n\     3. the prefix for the cohort being tested\n\n     4. the name of the output file which will include predicted epxression for all genes and all indiviausl : 1 row per gene, 1 column per individual.\n"; die;}
 
 my $betafile = $ARGV[0];
 #"/group/im-lab/nas40t2/hwheeler/PrediXcan_CV/GTEx_2014-06013_release/transfers/PrediXmod/DGN-WB/DGN-calc-weights/DGN-WB_weights/DGN-WB_elasticNet_alpha0.5_weights_all_chr1-22_2015-02-02.txt";
@@ -56,7 +61,11 @@ open (BETA, "$betafile") or die "cant open $betafile\n";
 while (my $line = <BETA>) {
     chomp($line);
     my @tmp = split(/\s+/,$line);
-    if ($tmp[0] eq "gene") {next;}
+    if ($tmp[0] eq "gene") {
+        if ($tmp[3] ne "effectAllele") {print "make sure the 4th column contains the effectAllele\n"; die;}
+        if ($tmp[2] ne "refAllele") {print "make sure the 3rd column contains the refAllele\n"; die;}
+        next;
+    }
     $SNPS{$tmp[1]} = 1;
     $BETAS{$tmp[1]}{$tmp[0]} = $tmp[4];
     $REF{$tmp[1]}{$tmp[0]} = $tmp[2];
@@ -80,10 +89,13 @@ close(SAMPLE);
 my %PREDICT = ();
 my %predictedgenes = ();
 foreach my $chr (1 .. 22) {
-    my $dosefile = "${genodir}${cohort}_chr${chr}.dos";
-    system("gunzip ${dosefile}.gz");
-    open (DOS, "$dosefile") or die "cant open $dosefile\n";
-    while (my $line = <DOS>) {
+    my $dosefile = "${genodir}${cohort}_chr${chr}.dos.gz";
+    #system("gunzip ${dosefile}.gz");
+    my $gz = gzopen($dosefile, "rb") or die "Error reading $dosefile\n";
+    while ($gz->gzreadline(my $line) > 0) {
+        
+        #    gzopen (DOS, "$dosefile") or die "cant open $dosefile\n";
+        #while (my $line = <DOS>) {
         chomp($line);
         my @tmp = split(/\s+/,$line);
         if ($#tmp != $index) {die "ERROR: $dosefile: number of individuals in sample file does not match dosage file\n";}
@@ -102,7 +114,7 @@ foreach my $chr (1 .. 22) {
                 }
                 next;
             }
-            if ($tmp[3] eq $EFF{$tmp[1]}{$gene}) {#if the effect snp is the same as the reference (non-dosage) allele... dosage needs to be flipped to match alleles. 
+            if ($tmp[3] eq $EFF{$tmp[1]}{$gene}) {#if the effect snp is the same as the reference (non-dosage) allele... dosage needs to be flipped to match alleles.
                 foreach my $i (6 .. $index) { #for each individual, i
                     if (exists($PREDICT{$gene}{$i})) {
                         $PREDICT{$gene}{$i} = $PREDICT{$gene}{$i} + (2-$tmp[$i])*$BETAS{$tmp[1]}{$gene};
@@ -115,8 +127,10 @@ foreach my $chr (1 .. 22) {
             print "ERROR: $tmp[1] effect SNP allele does not match either allele in dosage file, this SNP was removed from prediction model. Please check!\n";
         }
     }
-    close(DOS);
-    system("gzip ${dosefile}");
+    #close(DOS);
+    $gz->gzclose() ;
+    
+    #system("gzip ${dosefile}");
 }
 open (OUT, ">$outfile") or die "cant make $outfile\n";
 #print header row
