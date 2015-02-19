@@ -5,20 +5,20 @@ date <- Sys.Date()
 ###############################################
 ### Directories & Variables
  
-cri = F #on cri cluster?
+cri = T #on cri cluster?
 if(cri) precri = "/group/im-lab/" else precri = '/'
 
 my.dir <- precri %&% "nas40t2/hwheeler/PrediXcan_CV/GTEx_2014-06013_release/"
  
 #tissue <- "Nerve - Tibial" ###check GTEx_Analysis_2014-06-13.SampleTissue.annot for available tissues###
-tissue <- "Adipose - Subcutaneous"
-tis <- "GTEx-AdS"
+tissue <- "Thyroid"
+tis <- "GTEx-Thy"
 Nk <- 15 ##number of peer factors to calculate, recommend 25% of sample size, but no more than 100, GTEx included 15 in pilot analyses
  
 ################################################
 ### Functions & Libraries
  
-library(SNPRelate)
+#library(SNPRelate)
 library(peer)
 library(preprocessCore)
 #library(GenABEL)
@@ -124,7 +124,7 @@ weights = PEER_getW(model)
 precision = PEER_getAlpha(model)
 residuals = PEER_getResiduals(model)
 
-png(file= tis %&% "." %&% Nk %&% ".PEER.factors.plotmodel." %&% date %&% ".png")
+pdf(file= tis %&% "." %&% Nk %&% ".PEER.factors.plotmodel." %&% date %&% ".pdf")
 PEER_plotModel(model)
 dev.off()
 
