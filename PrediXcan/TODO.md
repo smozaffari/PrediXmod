@@ -1,0 +1,1 @@
+- [ ] In predict_gene_expression.py add additional checks. Now it's not using the second allele information to set the sign of the weights.
